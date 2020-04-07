@@ -5,6 +5,8 @@ The python script looks at a directory of photos and creates a matrix with each 
 The directory it creates them in is decided by a user prompt.
 It creates 4 matrices by default, saving each in a .mat file. It creates one for each of the RGB values of each pixel in addition to one for the grayscale version.
 After creating each matrix, it will prompt the user for a file name to save it as. It puts the file in the same directory as the photos and adds ".mat" itself
+It imports numpy for matrix construction and manipulation, scipy.io for octave compatibility, Image from PIL for image manipulation, and os to open the files.
+Of the above imports, you will need to pip install pillow and scipy
 
 The main octave script is "pets.m", the others I borrowed from a class and run the basic calculations, such as the cost function
 The octave script loads in three files specified in the code.

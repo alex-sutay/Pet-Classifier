@@ -9,7 +9,7 @@ num_labels = 3;          % 3 labels, one for each pet
 % Load Training Data
 fprintf('Loading and Visualizing Data ...\n')
 
-load('KaiaDatR.mat'); % The first file name that can be changed
+load('KaiaDatG.mat'); % The first file name that can be changed
 m1 = size(X, 1); 
 cutoff = .8 * m1;
 tempX = X(1:cutoff, :);     % Grab the first 80% for the training set
@@ -17,7 +17,7 @@ test = X(cutoff + 1:m1, :); % The rest goes in the test set
 m1 = size(tempX, 1);      % Re-evaluate the sizes
 mtest1 = size(test, 1);     
 
-load('ZoeyDatR.mat'); % The second file name that can be changed
+load('ZoeyDatG.mat'); % The second file name that can be changed
 m2 = size(X, 1);
 cutoff = .8 * m2;  
 test = [test; X(cutoff + 1:m2, :)];  % Grab the last 20% for the test set
@@ -25,7 +25,7 @@ tempX = [tempX; X(1:cutoff, :)];     % The first 80% goes in the training set
 m2 = size(tempX, 1) - m1;      % Re-evaluate the sizes
 mtest2 = size(test, 1) - mtest1;
 
-load('IzzyDatR.mat'); % The third file name that can be changed
+load('IzzyDatG.mat'); % The third file name that can be changed
 m3 = size(X, 1);
 cutoff = .8 * m3;
 test = [test; X(cutoff + 1:m3, :)];  % Grab the last 20% for the test set
@@ -69,7 +69,7 @@ fprintf('\nTraining Neural Network... \n')
 options = optimset('MaxIter', 10000);
 
 %  used for feature regularization
-lambda = 10;
+lambda = 100;
 
 % Create "short hand" for the cost function to be minimized
 costFunction = @(p) nnCostFunction(p, ...
@@ -97,11 +97,13 @@ fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
 pred = predict(Theta1, Theta2, test);
 fprintf('\nTest Set Accuracy: %f\n', mean(double(pred == ytest)) * 100);
 
+save("-v7", "Theta_output.mat", "Theta1", "Theta2");
+
 % Initial 600 photo test results (training set accuracy)
 % Grayscale accuracy: 88.989442%, 95.022624%, 74.660633%
 % Red channel Accuracy: 95.776772%, 77.224736%, 77.224736%
 % Green Channel Accuracy: 70.286576%, 85.520362%, 78.129713%
-% Blue Channel Accuracy: 97.737557%, 95.475113, 94.419306
+% Blue Channel Accuracy: 97.737557%, 95.475113%, 94.419306%
 % Conclusion: The algorithm is working, the results are slightly random. Blue performs quite well.
 
 % 1200 photo test results (960 in training set, 240 in test set), lambda = 1
@@ -113,15 +115,24 @@ fprintf('\nTest Set Accuracy: %f\n', mean(double(pred == ytest)) * 100);
 %   yet it is not doing well on the test set
 
 % 1200 photo test results (960 in training set, 240 in test set), lambda = 10
-% Grayscale accuracy: 68.333333%, 75.000000%, 67.500000
-% Red channel Accuracy:
-% Green Channel Accuracy:
-% Blue Channel Accuracy: 
-% Conclusion: The algorithm is still over fitting. Time to try a higher value for lambda.
+% Grayscale accuracy: 68.333333%, 75.000000%, 67.500000%
+% Red channel Accuracy: 62.500000%, 59.583333%, 64.583333%
+% Green Channel Accuracy: 69.583333%, 68.333333%, 67.916667%
+% Blue Channel Accuracy: 56.666667%, 68.750000%, 65.000000%
+% Conclusion: The algorithm is still over fitting. Time to try a higher value for lambda. Although, having more data
+%   will probably also help
 
-% 1200 photo test results (960 in training set, 240 in test set), lambda = 100
-% Grayscale accuracy: 
-% Red channel Accuracy:
-% Green Channel Accuracy:
+% 1200 photo test results (960 in training set, 240 in test set), lambda = 1000
+% Grayscale accuracy: 56.666667%,  65.000000%, 70.833333%
+% Red channel Accuracy: 59.166667%, 65.416667%, 67.916667%
+% Green Channel Accuracy: 68.750000%, 71.250000%, 68.750000%
+% Blue Channel Accuracy: 64.166667%, 65.416667%, 67.083333%
+% Conclusion: It's still overfitting, but looking at the image output, you don't see specific animals in any nodes
+%   any more. It probably just needs more data and then a smaller lambda will probably do fine, maybe 100
+
+% 2025 photo test results (1620 in training set, 405 in test set), lambda = 100
+% Grayscale accuracy: 70.370370%, 69.382716%, 68.395062%
+% Red channel Accuracy: 65.185185%, 63.456790%, 62.222222%
+% Green Channel Accuracy: 
 % Blue Channel Accuracy: 
-% Conclusion:
+% Conclusion: 

@@ -7,6 +7,7 @@ import discord
 import predictImage
 import pic_to_vect
 from PIL import Image
+import numpy as np
 from config import TOKEN, THETA_FILE, CHANNEL, KEY
 """
 TOKEN is the bot token provided by discord
@@ -33,8 +34,19 @@ async def on_message(message):
                   'b': pic_to_vect.to_nums_b,  'l': pic_to_vect.to_nums_l}
         im_array = functs[CHANNEL](im, pic_to_vect.SIZE, pic_to_vect.SIZE)
         thetas = predictImage.thetas_from_mat(THETA_FILE)
-        pred = predictImage.predict(thetas, im_array)
-        await message.channel.send("Is it possibly " + KEY[pred] + "?")
+        pred_vec = predictImage.predict(thetas, im_array)
+        pred = np.argmax(pred_vec)
+        if pred_vec[pred] > .9:
+            msg = "I think that's " + KEY[pred] + ".\n"
+        elif pred_vec[pred] > .75:
+            msg = "Is it possibly " + KEY[pred] + "?\n"
+        elif pred_vec[pred] > .5:
+            msg = "That might be " + KEY[pred] + "...\n"
+        else:
+            msg = "I don't recognize that one.\n"
+        for idx in range(0, np.size(pred_vec)):
+            msg += KEY[idx] + ": " + str(pred_vec[idx] * 100) + "%\n"
+        await message.channel.send(msg)
 
 
 @client.event

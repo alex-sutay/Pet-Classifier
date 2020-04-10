@@ -21,6 +21,7 @@ TOKEN: the bot token provided by discord
 THETA_FILE: the name of the file containing the parameters for the neural network
 CHANNEL: the color channel you want to use. It can be 'r', 'g', 'b', or 'l'(grayscale)
 KEY: the answer key for what each number output represents. It should be a dictionary of integers to strings
+In addition to the requirements above, running classifierBot.py will require you pip install discord
 
 The main octave script is "pets.m", the others I borrowed from a class and run the basic calculations, such as the cost function
 The octave script loads in three files specified in the code.

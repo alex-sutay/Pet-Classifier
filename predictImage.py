@@ -12,17 +12,17 @@ import pic_to_vect
 def predict(thetas, im_vector):
     """
     Given thetas in a list in the correct order and an image vector, feed forward
-    through the thetas and select the highest probability
+    through the thetas and return the prediction vector
     :param thetas: a list of theta vectors
     :param im_vector: the vector representing an image
-    :return: an integer representing the index of the hypothesis
+    :return: a vector representing the probability of each option
     """
     hypo = im_vector  # Start with the image vector
     for theta in thetas:
         hypo = np.concatenate([[1], hypo])  # Add a 1 to the beginning
         hypo = np.dot(hypo, np.transpose(theta))  # Multiply it by this layer
         hypo = 1/(1 + np.exp(-hypo))  # Apply the sigmoid function
-    return np.argmax(hypo)
+    return hypo
 
 
 def thetas_from_mat(filename):

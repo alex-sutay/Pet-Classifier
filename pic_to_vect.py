@@ -9,6 +9,7 @@ import numpy as np
 import scipy.io as sio
 from PIL import Image
 import os
+SIZE = 40  # How many pixels should it be?
 
 
 def main():
@@ -21,10 +22,10 @@ def main():
         for filename in os.listdir(directory):
             if filename.endswith((".jpg", ".png", ".jpeg")):
                 im = Image.open(directory + "/" + filename, 'r')
-                this_array = function(im, 40, 40)
+                this_array = function(im, SIZE, SIZE)
                 if outmatrix is None:
                     outmatrix = this_array
-                elif np.size(outmatrix) == 1600:
+                elif np.size(outmatrix) == SIZE**2:
                     outmatrix = np.asarray([outmatrix, this_array])
                 else:
                     outmatrix = np.vstack([outmatrix, this_array])

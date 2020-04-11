@@ -26,4 +26,4 @@ In addition to the requirements above, running classifierBot.py will require you
 The main octave script is "pets.m", the others I borrowed from a class and run the basic calculations, such as the cost function
 The octave script loads in three files specified in the code.
 It assumes that the data in each file is saved as "X".
-It automatically takes the last 20% of each matrix to form the test set and uses the first 80% as the training set
+It automatically takes a random 20% of each matrix to form the test set and uses the other 80% as the training set

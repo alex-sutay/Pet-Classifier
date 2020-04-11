@@ -9,24 +9,27 @@ num_labels = 3;          % 3 labels, one for each pet
 % Load Training Data
 fprintf('Loading and Visualizing Data ...\n')
 
-load('KaiaDatG.mat'); % The first file name that can be changed
+load('KaiaDatB.mat'); % The first file name that can be changed
 m1 = size(X, 1); 
+X = X(randperm(m1), :);  % Shuffle the rows so that a different set is used for the test set each time
 cutoff = .8 * m1;
 tempX = X(1:cutoff, :);     % Grab the first 80% for the training set
 test = X(cutoff + 1:m1, :); % The rest goes in the test set
 m1 = size(tempX, 1);      % Re-evaluate the sizes
 mtest1 = size(test, 1);     
 
-load('ZoeyDatG.mat'); % The second file name that can be changed
+load('ZoeyDatB.mat'); % The second file name that can be changed
 m2 = size(X, 1);
+X = X(randperm(m2), :);  % Shuffle the rows so that a different set is used for the test set each time
 cutoff = .8 * m2;  
 test = [test; X(cutoff + 1:m2, :)];  % Grab the last 20% for the test set
 tempX = [tempX; X(1:cutoff, :)];     % The first 80% goes in the training set
 m2 = size(tempX, 1) - m1;      % Re-evaluate the sizes
 mtest2 = size(test, 1) - mtest1;
 
-load('IzzyDatG.mat'); % The third file name that can be changed
+load('IzzyDatB.mat'); % The third file name that can be changed
 m3 = size(X, 1);
+X = X(randperm(m3), :);  % Shuffle the rows so that a different set is used for the test set each time
 cutoff = .8 * m3;
 test = [test; X(cutoff + 1:m3, :)];  % Grab the last 20% for the test set
 tempX = [tempX; X(1:cutoff, :)];     % The first 80% goes in the training set
@@ -66,10 +69,10 @@ nn_params = [Theta1(:) ; Theta2(:)];
 
 fprintf('\nTraining Neural Network... \n')
 
-options = optimset('MaxIter', 10000);
+options = optimset('MaxIter', 5000);
 
 %  used for feature regularization
-lambda = 100;
+lambda = 1000;
 
 % Create "short hand" for the cost function to be minimized
 costFunction = @(p) nnCostFunction(p, ...
@@ -133,6 +136,14 @@ save("-v7", "Theta_output.mat", "Theta1", "Theta2");
 % 2025 photo test results (1620 in training set, 405 in test set), lambda = 100
 % Grayscale accuracy: 70.370370%, 69.382716%, 68.395062%
 % Red channel Accuracy: 65.185185%, 63.456790%, 62.222222%
-% Green Channel Accuracy: 
-% Blue Channel Accuracy: 
+% Green Channel Accuracy: 69.382716%, 68.888889%, 71.111111%
+% Blue Channel Accuracy: 68.641975%, 68.888889%, 69.876543%
+% Conclusion: It is still overfitting quite a bit, despite the extra data. Although even more data will probably
+%   help, I think it's time to change some ohter aspects. Maybe it would generalize better if it used less iters...
+
+% 2025 photo test results (1620 in training set, 405 in test set), lambda = 1000, MaxIter = 5000
+% Grayscale accuracy: 68.888889%, 68.395062%, 70.864198%
+% Red channel Accuracy: 63.456790%, 64.444444%, 64.938272%
+% Green Channel Accuracy: 63.209877%, 68.641975%, 68.888889%
+% Blue Channel Accuracy: 67.901235%, 70.617284%, 
 % Conclusion: 

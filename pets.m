@@ -7,57 +7,57 @@ hidden_layer_size = 50;   % 50 hidden units
 num_labels = 3;          % 3 labels, one for each pet   
 
 % Load Training Data
-fprintf('Loading and Visualizing Data ...\n')
+printf('Select data files:\n')
 
-load('KaiaDatB.mat'); % The first file name that can be changed
-m1 = size(X, 1); 
-X = X(randperm(m1), :);  % Shuffle the rows so that a different set is used for the test set each time
-cutoff = .8 * m1;
-tempX = X(1:cutoff, :);     % Grab the first 80% for the training set
-test = X(cutoff + 1:m1, :); % The rest goes in the test set
-m1 = size(tempX, 1);      % Re-evaluate the sizes
-mtest1 = size(test, 1);     
+count = 0;
+y = [];
+ytest = [];
+finalX = [];
+finaltest = [];
+while true
+    count += 1;
+    
+    filename = uigetfile();
+    if (filename == 0)
+        break;
+    endif
+    
+    disp(filename);
+    load(filename);
+    m = size(X, 1); 
+    X = X(randperm(m), :);  % Shuffle the rows so that a different set is used for the test set each time
+    cutoff = .8 * m;
+    tempX = X(1:cutoff, :);     % Grab the first 80% for the training set
+    test = X(cutoff + 1:m, :); % The rest goes in the test set
+    m = size(tempX, 1);      % Re-evaluate the sizes
+    mtest = size(test, 1); 
+        
+    % Set up the expected outputs for the training and test set
+    y = [y; count*ones(m, 1)];
+    ytest = [ytest; count*ones(mtest, 1)];
+    
+    % Put it together with the rest
+    finalX = [finalX; tempX];
+    finaltest = [finaltest; test];
+    m = size(finalX, 1);
+    mtest = size(finaltest, 1);
 
-load('ZoeyDatB.mat'); % The second file name that can be changed
-m2 = size(X, 1);
-X = X(randperm(m2), :);  % Shuffle the rows so that a different set is used for the test set each time
-cutoff = .8 * m2;  
-test = [test; X(cutoff + 1:m2, :)];  % Grab the last 20% for the test set
-tempX = [tempX; X(1:cutoff, :)];     % The first 80% goes in the training set
-m2 = size(tempX, 1) - m1;      % Re-evaluate the sizes
-mtest2 = size(test, 1) - mtest1;
+endwhile
 
-load('IzzyDatB.mat'); % The third file name that can be changed
-m3 = size(X, 1);
-X = X(randperm(m3), :);  % Shuffle the rows so that a different set is used for the test set each time
-cutoff = .8 * m3;
-test = [test; X(cutoff + 1:m3, :)];  % Grab the last 20% for the test set
-tempX = [tempX; X(1:cutoff, :)];     % The first 80% goes in the training set
-m3 = size(tempX, 1) - m1-m2;      % Re-evaluate the sizes
-mtest3 = size(test, 1) - mtest1-mtest2;
-
-% Put it all together
-X = tempX;
-m = size(X, 1);
-mtest = size(test, 1);
-
-% Set up the expected outputs for the training set
-y(1:m1) = 1;
-y(m1+1:m1+m2) = 2;
-y(m1+m2+1:m) = 3;
-y = y';  % The above code stores Y as a horizantal vecotr, we need it to be vertical
-
-% Same as above, but for the test set
-ytest(1:mtest1) = 1;
-ytest(mtest1+1:mtest1+mtest2) = 2;
-ytest(mtest1+mtest2+1:mtest) = 3;
-ytest = ytest';
+X = finalX;
+test = finaltest;
+printf('Examples in training set: ');
+printf(num2str(m));
+printf('\n');
+printf('Examples in test set: ');
+printf(num2str(mtest));
+printf('\n');
+pause
 
 % Randomly select 100 data points to display
+fprintf('\nVisualizing data... \n')
 sel = randperm(size(X, 1));
 sel = sel(1:100);
-
-fprintf('\nVisualizing data... \n')
 
 displayData(X(sel, :));
 
@@ -145,5 +145,13 @@ save("-v7", "Theta_output.mat", "Theta1", "Theta2");
 % Grayscale accuracy: 68.888889%, 68.395062%, 70.864198%
 % Red channel Accuracy: 63.456790%, 64.444444%, 64.938272%
 % Green Channel Accuracy: 63.209877%, 68.641975%, 68.888889%
-% Blue Channel Accuracy: 67.901235%, 70.617284%, 
-% Conclusion: 
+% Blue Channel Accuracy: 67.901235%, 70.617284%, 68.641975%
+% Conclusion: I got it to overfit a bit less, but it's still a problem. There isn't much else I can do other than 
+%   collect more data. So for now that's the next step
+
+% 2805 photo test results (2244 in training set, 561 in test set), lambda = 1000, MaxIter = 5000
+% Grayscale accuracy: 
+% Red channel Accuracy: 
+% Green Channel Accuracy: 
+% Blue Channel Accuracy: 
+% Conclusion:

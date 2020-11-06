@@ -36,9 +36,9 @@ async def on_message(message):
         thetas = predictImage.thetas_from_mat(THETA_FILE)
         pred_vec = predictImage.predict(thetas, im_array)
         pred = np.argmax(pred_vec)
-        if pred_vec[pred] > .9:
+        if pred_vec[pred] > .8:
             msg = "I think that's " + KEY[pred] + ".\n"
-        elif pred_vec[pred] > .75:
+        elif pred_vec[pred] > .6:
             msg = "Is it possibly " + KEY[pred] + "?\n"
         elif pred_vec[pred] > .5:
             msg = "That might be " + KEY[pred] + "...\n"

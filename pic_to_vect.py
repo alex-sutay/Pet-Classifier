@@ -23,6 +23,7 @@ def main():
             if filename.endswith((".jpg", ".png", ".jpeg")):
                 im = Image.open(directory + "/" + filename, 'r')
                 this_array = function(im, SIZE, SIZE)
+                im.close()
                 if outmatrix is None:
                     outmatrix = this_array
                 elif np.size(outmatrix) == SIZE**2:
